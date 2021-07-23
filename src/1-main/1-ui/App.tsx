@@ -19,7 +19,7 @@ const App = () => {
           <Route path={"/registration"} render={() => <Registration/>}/>
           <Route path={"/recovery"} render={() => <RecoveryPassword/>}/>
           <Route path={"/new-password"} render={() => <NewPassword/>}/>
-          <Route path={"/404"} render={() => <h1>404: page not found</h1>}/>
+          <Route path={"/404"} render={() => <h1>404:: page not found</h1>}/>
           <Redirect from={"*"} to={"/404"}/>
         </Switch>
       </BrowserRouter>
