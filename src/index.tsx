@@ -4,10 +4,11 @@ import './index.css';
 import App from './1-main/1-ui/App';
 import reportWebVitals from './reportWebVitals';
 import {Provider} from 'react-redux';
+import store from './1-main/2-bll/store';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={}>
+    <Provider store={store}>
       <App/>
     </Provider>
   </React.StrictMode>,
