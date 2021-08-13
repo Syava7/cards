@@ -8,6 +8,7 @@ import {AppActionsType, appSlice} from "./app-reducer";
 import {configureStore} from "@reduxjs/toolkit";
 import {DecksActionsType, decksSlice} from "./decks-reducer";
 import {CardsActionsType, cardsSlice} from "./cards-reducer";
+import {learningSlice} from "./learning-reducer";
 
 const rootReducer = combineReducers({
     profile: profileSlice.reducer,
@@ -16,7 +17,8 @@ const rootReducer = combineReducers({
     recovery: recoverySlice.reducer,
     app: appSlice.reducer,
     decks: decksSlice.reducer,
-    cards: cardsSlice.reducer
+    cards: cardsSlice.reducer,
+    learning: learningSlice.reducer
 })
 
 export const store = configureStore({
@@ -36,6 +38,10 @@ export type AllAppActionsType =
     | DecksActionsType
 
 export type AppDispatchType = typeof store.dispatch
-
+export type ThunkApiType = {
+    dispatch: AppDispatchType,
+    state: AppStoreType,
+    rejectValue: string
+}
 //@ts-ignore
 window.store = store

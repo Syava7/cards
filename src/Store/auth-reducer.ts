@@ -70,8 +70,9 @@ export const login = (authData: AuthDataType): AppThunk => async dispatch => {
     }
 }
 
-export const logout = (): AppThunk => async dispatch => {
+export const logout = (): AppThunk => async (dispatch) => {
     try {
+        dispatch({type: "jfjdkfjd", bbb: "jdjdsnjd"})
         dispatch(setAppStatus("loading"))
         await authAPI.logout()
         dispatch(changeLoginStatus(false))

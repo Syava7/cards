@@ -8,7 +8,7 @@ import {
     UpdateDeckRequestData
 } from "../Api/api";
 import {setAppStatus} from "./app-reducer";
-import {AppDispatchType, AppStoreType} from "./store";
+import {ThunkApiType} from "./store";
 import {DataForRequest, getDecksRequestDC} from "../Components/Features/Main/MainCommon/utils/dataHandlers";
 import {handleServerNetworkError} from "../Components/Features/Authorization/AuthCommon/utils/errorHandler";
 
@@ -18,20 +18,23 @@ const initialState = {
     visiblePage: 1,
     totalCount: 0,
     minCardsCount: 0,
-    maxCardsCount: 0,
-    minSelectedCards: 0,
-    maxSelectedCards: 0
+    maxCardsCount: 1000000,
+    selectedDeckID: "",
+    minSelectedCardsCount: null as number | null,
+    maxSelectedCardsCount: null as number | null
 }
 
 export const getDecks = createAsyncThunk<DeckResponseType, GetDecksRequestDataType, ThunkApiType>("decks/getDecks",
-    async (data, thunkAPI) => {
+    async (data, {dispatch, rejectWithValue}) => {
         try {
-            thunkAPI.dispatch(setAppStatus("loading"))
+            dispatch(setAppStatus("loading"))
             const response = await decksAPI.getDecks(data)
-            thunkAPI.dispatch(setAppStatus("succeeded"))
+            dispatch(changeMinCount(response.data.minCardsCount))
+            dispatch(changeMinCount(response.data.maxCardsCount))
+            dispatch(setAppStatus("succeeded"))
             return response.data
         } catch (error) {
-            return thunkAPI.rejectWithValue(handleServerNetworkError(error, thunkAPI.dispatch))
+            return rejectWithValue(handleServerNetworkError(error, dispatch))
         }
     })
 
@@ -99,15 +102,24 @@ export const decksSlice = createSlice({
         changeDecksFilter(state, action: PayloadAction<ShowDecksModeType>) {
             state.filter = action.payload
         },
-        changeVisiblePage(state, action: PayloadAction<number>) {
+        changeVisibleDecksPage(state, action: PayloadAction<number>) {
             state.visiblePage = action.payload
         },
-        changeMinCardsCount(state, action: PayloadAction<number>) {
-            state.minSelectedCards = action.payload
+        setDeckID(state, action: PayloadAction<string>) {
+            state.selectedDeckID = action.payload
         },
-        changeMaxCardsCount(state, action: PayloadAction<number>) {
-            state.maxSelectedCards = action.payload
+        changeMinSelected(state, action: PayloadAction<number>) {
+            state.minSelectedCardsCount = action.payload
         },
+        changeMaxSelected(state, action: PayloadAction<number>) {
+            state.maxSelectedCardsCount = action.payload
+        },
+        changeMinCount(state, action: PayloadAction<number>) {
+            state.minCardsCount = action.payload
+        },
+        changeMaxCount(state, action: PayloadAction<number>) {
+            state.maxCardsCount = action.payload
+        }
     },
     extraReducers: builder => {
         builder.addCase(getDecks.fulfilled, (state, action) => {
@@ -115,21 +127,15 @@ export const decksSlice = createSlice({
             state.totalCount = action.payload.cardPacksTotalCount
             state.minCardsCount = action.payload.minCardsCount
             state.maxCardsCount = action.payload.maxCardsCount
-            state.minSelectedCards = action.payload.minCardsCount
-            state.maxSelectedCards = action.payload.maxCardsCount
         })
     }
 })
 
-export const {changeDecksFilter, changeVisiblePage, changeMaxCardsCount, changeMinCardsCount} = decksSlice.actions
+export const {changeDecksFilter, changeVisibleDecksPage,
+    setDeckID, changeMinSelected, changeMaxSelected, changeMinCount, changeMaxCount} = decksSlice.actions
 
 
 // types
 export type DecksStateType = typeof initialState
 export type DecksActionsType = any
 export type ShowDecksModeType = "My" | "All"
-type ThunkApiType = {
-    dispatch: AppDispatchType,
-    state: AppStoreType,
-    rejectValue: string
-}
