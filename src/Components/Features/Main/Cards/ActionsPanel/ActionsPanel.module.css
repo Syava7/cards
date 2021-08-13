@@ -1,0 +1,18 @@
+.buttonsPanel {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+.buttonsPanel > button {
+    height: 70%;
+}
+
+.deleteButton {
+    background-color: #ba1f3e;
+    color: #ffffff;
+    margin-right: 15px;
+}
+
+.deleteButton:hover {
+    background-color: #d2153a;
+}
