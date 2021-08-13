@@ -1,0 +1,11 @@
+.button_box {
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cancel {
+    width: 100px;
+    margin-right: 25px;
+}
